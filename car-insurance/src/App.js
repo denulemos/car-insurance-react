@@ -1,8 +1,14 @@
 import {QuoteProvider} from './context/QuoteProvider';
 import InsuranceApp from "./components/InsuranceApp";
+import React from 'react';
 function App() {
   return (
-    <QuoteProvider><InsuranceApp/></QuoteProvider>
+    <React.StrictMode>    
+      <QuoteProvider>
+      <InsuranceApp/>
+      </QuoteProvider>
+      </React.StrictMode>
+
     
   );
 }

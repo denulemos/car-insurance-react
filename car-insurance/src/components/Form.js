@@ -1,24 +1,37 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {LABELS, YEARS, PLANS} from '../constants';
-import CotizadorContext from '../context/QuoteProvider';
+import useQuote from '../hooks/useQuote';
+import Error from './Error';
 
 const Form = () => {
 
-    // we need to specify which context we want to use, we can have more than one context
-    const {modal, setModal} = useContext(CotizadorContext);
+    const {data, handleChangeData, setError, error, quote}  = useQuote();
+
+    const handleSubmit = e => {
+        // prevent reload
+        e.preventDefault();
+        // if any object is empty
+        if (Object.values(data).includes('')) {
+            setError('All the fields must be filled');
+            return
+        }
+
+        setError('');
+        quote();
+    }
 
     return (
         <>
-        <button onClick={()=> setModal(!modal)}>
-            Modal
-        </button>
-            <form>
+        {
+            error && <Error/>
+        }
+            <form onSubmit={handleSubmit}>
                 <div className="my-5">
                     <label className="block mb-3 font-bold text-gray-400">
                         Label
                     </label>
-                    <select name="label" className="w-full p-3 bg-white border border-gray-400 focus:outline-none focus:border-indigo-500 text-base leading-6 font-medium text-gray-700">
-                        <option value="">Select an option</option>
+                    <select onChange={(e) => handleChangeData(e)} name="label" className="w-full p-3 bg-white border border-gray-400 focus:outline-none focus:border-indigo-500 text-base leading-6 font-medium text-gray-700">
+                        <option value={data.id}>Select an option</option>
                         {LABELS.map(label => (
                             <option key={label.id} value={label.id}>{label.name}</option>
                         ))}
@@ -29,8 +42,8 @@ const Form = () => {
                     <label className="block mb-3 font-bold text-gray-400">
                         Year
                     </label>
-                    <select name="label" className="w-full p-3 bg-white border border-gray-400 focus:outline-none focus:border-indigo-500 text-base leading-6 font-medium text-gray-700">
-                        <option value="">Select a year</option>
+                    <select onChange={(e) => handleChangeData(e)} name="year" className="w-full p-3 bg-white border border-gray-400 focus:outline-none focus:border-indigo-500 text-base leading-6 font-medium text-gray-700">
+                        <option value={data.year}>Select a year</option>
                         {YEARS.map(year => (
                             <option key={year} value={year}>{year}</option>
                         ))}
@@ -41,13 +54,14 @@ const Form = () => {
                     <label className="block mb-3 font-bold text-gray-400">
                         Plan
                     </label>
-                    <div className="flex gap-3 items-center">
+                    <div  className="flex gap-3 items-center">
                         {PLANS.map(plan => (
                             <div key={plan.id}>
                                 <label>
                                     {plan.name}
                                 </label>
                                 <input
+                                onChange={(e) => handleChangeData(e)}
                                 type="radio"
                                 name="plan"
                                 value={plan.id}
