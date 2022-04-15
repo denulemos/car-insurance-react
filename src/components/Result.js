@@ -9,6 +9,11 @@ const Result = () => {
     // they will re-render if results changes
     const labelName = useCallback(LABELS.filter(m => m.id === Number(label)), [result]);
     const planName = useCallback(PLANS.filter(m => m.id === Number(plan)), [result]);
+
+    // same with useMemo
+    // const labelName = useMemo(() => LABELS.filter(m => m.id === Number(label)), [result]);
+    // const planName = useMemo(() => PLANS.filter(m => m.id === Number(plan)), [result]);
+    
     const yearRef = useRef(year);
 
     if (result === 0) return null
